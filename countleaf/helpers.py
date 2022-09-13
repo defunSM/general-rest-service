@@ -1,8 +1,8 @@
 import re
-import nltk
 
 from typing import List
 from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 def strip_punctuation(text: str) -> str:
     """ Removes any punctuations from text and returns the punctuation free text.
@@ -29,8 +29,10 @@ def strip_gaps(text: str) -> str:
     
     return new_text
 
-def strip_articles(text: str, stopwords: List[str]) -> str:
+def strip_articles(text: str) -> str:
     """ Use nltk's stopwords corpus to filter out articles from text."""
     
+    text_tokenized = word_tokenize(text)
+    text_without_articles = [word for word in text_tokenized if not word in stopwords.words()]
     
-    pass
+    return text_without_articles

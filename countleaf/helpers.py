@@ -29,10 +29,9 @@ def strip_gaps(text: str) -> str:
     
     return new_text
 
-def strip_articles(text: str) -> str:
+def strip_articles(tokenized_words: List[str]) -> str:
     """ Use nltk's stopwords corpus to filter out articles from text."""
     
-    text_tokenized = word_tokenize(text)
-    text_without_articles = [word for word in text_tokenized if not word in stopwords.words()]
+    text_without_articles = [word for word in tokenized_words if not word in stopwords.words()]
     
     return text_without_articles

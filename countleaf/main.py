@@ -12,17 +12,36 @@ def count_frequent_word(text: str) -> str:
     pass
 
 def count_sentences(text: str) -> int:
-    """ Counts the sentences based on how many periods there are after a alpha
+    """ Counts the number of full stop sentences. If there are characters between the period it will not count as a full stop sentence.
+    
+    Examples: 
+    This would. Be considered. 3 sentences.
+    This would.Would be considered. 2 sentences.
+    
     """
+    
+    # Remove non full stop punctuations
+    text = re.sub(pattern = "\.(?!\s|$)",
+                  repl = "",
+                  string = text)
+    
+    return text.count(".")
+    
 
 def count_letters(text: str) -> int:
     
     text = strip_punctuation(text)
     
     # Removes spaces from the text so only characters are left
+    text = strip_gaps(text)
     text = text.replace(" ", "")
     
-    return len(text.split())
+    count = 0
+    for i in text:
+        count += 1
+        print(i)
+        
+    return count
 
 def count_words(text):
     """Counts the number of words in each string. Will ignore punctuation"""
@@ -60,8 +79,6 @@ def text_summary(text: str, articles: bool = 0) -> dict:
 
 if __name__ == '__main__':
     test = """
-    sadfas sadas i they myself ....
-    asdas
-    man out here 
+    Physics is the natural science that studies matter,[a] its fundamental constituents, its motion and behavior through space and time, and the related entities of energy and force. Physics is one of the most fundamental scientific disciplines, with its main goal being to understand how the universe behaves. A scientist who specializes in the field of physics is called a physicist.
     """
-    print(strip_articles(test))
+    print(count_sentences(test))

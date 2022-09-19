@@ -3,13 +3,23 @@ import re
 
 from typing import List
 from nltk.tokenize import word_tokenize
+from collections import Counter
 
 from helpers import strip_articles, strip_gaps, strip_punctuation
 
 # TODO: Stripping punctuation twice in count_words and count_letters try to apply dry principle
 
-def count_frequent_word(text: str) -> str:
-    pass
+def count_frequent_word(text: str) -> Counter[str]:
+    """ A data type of Counter with the first element being the word and the second element being the number of times that word appears in the text.
+
+    Example of the return:
+        [("the", 4), ("my", 3)]
+    """
+    text = strip_punctuation(text)
+    words = text.split()
+    word_counter = Counter(words)
+    
+    return word_counter.most_common()
 
 def count_sentences(text: str) -> int:
     """ Counts the number of full stop sentences. If there are characters between the period it will not count as a full stop sentence.
@@ -27,7 +37,6 @@ def count_sentences(text: str) -> int:
     
     return text.count(".")
     
-
 def count_letters(text: str) -> int:
     
     text = strip_punctuation(text)
@@ -39,7 +48,6 @@ def count_letters(text: str) -> int:
     count = 0
     for i in text:
         count += 1
-        print(i)
         
     return count
 
@@ -54,7 +62,6 @@ def count_words(text):
     
     return len(text)
     
-
 def text_summary(text: str, articles: bool = 0) -> dict:
     """ Returns a summary of the string including how many words, letters, sentences, letters / word, words / sentence, most frequent word within the block of text including compute time.
 
@@ -65,20 +72,23 @@ def text_summary(text: str, articles: bool = 0) -> dict:
     Returns:
         dict: _description_
     """
+    
+    text_details = {}
+    
     if articles:
         text = "".join(strip_articles(text))
     
-    words = count_words(text)
-    letters = count_letters(text)
-    sentences = count_sentences(text)
-    letters_per_word = letters / words
-    words_per_sentence = words / sentences 
-    most_frequent_word = count_frequent_word(text)
+    text_details["words"] = count_words(text)
+    text_details["letters"] = count_letters(text)
+    text_details["sentences"] = count_sentences(text)
+    text_details["letters_per_word"] = text_details["letters"] / text_details["words"]
+    text_details["words_per_sentence"] = text_details["words"] / text_details["sentences"]
+    text_details["most_frequent_word"] = count_frequent_word(text)[0][0]
     
-    pass
+    return text_details
 
 if __name__ == '__main__':
     test = """
     Physics is the natural science that studies matter,[a] its fundamental constituents, its motion and behavior through space and time, and the related entities of energy and force. Physics is one of the most fundamental scientific disciplines, with its main goal being to understand how the universe behaves. A scientist who specializes in the field of physics is called a physicist.
     """
-    print(count_sentences(test))
+    print(text_summary(test))

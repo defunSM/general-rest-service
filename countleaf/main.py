@@ -5,7 +5,7 @@ from typing import List
 from nltk.tokenize import word_tokenize
 from collections import Counter
 
-from helpers import strip_articles, strip_gaps, strip_punctuation
+from .helpers import strip_articles, strip_gaps, strip_punctuation
 
 # TODO: Stripping punctuation twice in count_words and count_letters try to apply dry principle
 

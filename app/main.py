@@ -2,7 +2,7 @@ from typing import Union
 
 from fastapi import FastAPI
 
-from app.countleaf import main
+from countleaf import main
 
 app = FastAPI(title="General Rest API")
 

@@ -1,9 +1,14 @@
 
 import re
+import urllib.request
 
-from typing import List
 from nltk.tokenize import word_tokenize
 from collections import Counter
+from thefuzz import fuzz
+
+from transformers import pipeline
+
+from bs4 import BeautifulSoup
 
 from .helpers import strip_articles, strip_gaps, strip_punctuation
 
@@ -61,8 +66,20 @@ def count_words(text):
     text = word_tokenize(text)
     
     return len(text)
+
+def extract_text_from_url(url: str):
     
-def text_summary(text: str, articles: bool = 0) -> dict:
+    html = urllib.request.urlopen(url)
+    html_parsed = BeautifulSoup(html, 'html.parser')
+    
+    text = ""
+    
+    for paragraph in html_parsed.find_all("p"):
+        text += paragraph.get_text()
+    
+    return text
+    
+def text_summary(text: str, articles: bool = 0, url: bool = 0) -> dict:
     """ Returns a summary of the string including how many words, letters, sentences, letters / word, words / sentence, most frequent word within the block of text including compute time.
 
     Args:
@@ -75,8 +92,11 @@ def text_summary(text: str, articles: bool = 0) -> dict:
     
     text_details = {}
     
-    if articles:
-        text = "".join(strip_articles(text))
+    if url:
+        text = extract_text_from_url(text)
+    
+    # if articles:
+    #     text = "".join(strip_articles(text))
     
     text_details["words"] = count_words(text)
     text_details["letters"] = count_letters(text)
@@ -95,6 +115,13 @@ def text_summary(text: str, articles: bool = 0) -> dict:
     text_details["most_frequent_word"] = count_frequent_word(text)[0][0]
     
     return text_details
+
+def text_similarity(text1: str, text2: str) -> int:
+    return fuzz.token_sort_ratio(text1, text2)
+
+def sentiment_analysis(text: str):
+    sentiment_pipeline = pipeline('sentiment-analysis')
+    return sentiment_pipeline(text)
 
 if __name__ == '__main__':
     test = """

@@ -4,12 +4,16 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 from typing import Union
 
+import os
+from dotenv import load_dotenv
+
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from fastapi import Depends, FastAPI, HTTPException, status
-# to get a string like this run:
-# openssl rand -hex 32
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+
+
+load_dotenv()
+SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -17,11 +21,12 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 fake_users_db = {
     "johndoe": {
-        "username": "johndoe",
+        "username": "test",
         "full_name": "John Doe",
         "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+        "hashed_password": "$2b$12$pHjpVkEmHKpPC2VbRrktLe.3UCg51p.OmKvTUD6WlL3QXJiNzn8mW",
         "disabled": False,
+        "uid": "sadsdasd",
     }
 }
 
@@ -39,8 +44,8 @@ class User(BaseModel):
     username: str
     email: Union[str, None] = None
     full_name: Union[str, None] = None
+    password: Union[str, None] = None
     disabled: Union[bool, None] = None
-
 
 class UserInDB(User):
     hashed_password: str
@@ -58,14 +63,16 @@ def get_password_hash(password):
 def get_user(db, username: str):
     if username in db:
         user_dict = db[username]
-        return UserInDB(**user_dict)
+        return user_dict
+    else:
+        return None
 
 
 def authenticate_user(fake_db, username: str, password: str):
     user = get_user(fake_db, username)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user['password']):
         return False
     return user
 
@@ -102,6 +109,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 
 async def get_current_active_user(current_user: User = Depends(get_current_user)):
-    if current_user.disabled:
+    print(current_user)
+    if current_user['disabled']:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

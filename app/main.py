@@ -1,6 +1,7 @@
-from typing import Union
+from typing import Union, Optional
 
 from fastapi import Depends, FastAPI, HTTPException, status
+from uuid import uuid4
 
 from countleaf import main
 from countleaf import security
@@ -101,16 +102,41 @@ async def login_for_access_token(form_data: security.OAuth2PasswordRequestForm =
         )
     access_token_expires = security.timedelta(minutes=security.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = security.create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user['username']}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@app.get("/users/me/", response_model=security.User)
+@app.get("/users/me/", response_model=security.User, tags=['test'])
 async def read_users_me(current_user: security.User = Depends(security.get_current_active_user)):
     return current_user
 
 
-@app.get("/users/me/items/")
+@app.get("/users/me/items/", tags=['test'])
 async def read_own_items(current_user: security.User = Depends(security.get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user.username}]
+
+@app.post('/signup', summary="Create new user", response_model=security.User)
+async def sign_up(data: security.User):
+    user = security.get_user(security.fake_users_db, data.username)
+    
+    user: Union[security.User, None]
+    
+    if user is not None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User with this email already exist"
+        )
+        
+    new_user = {
+        'username': data.username,
+        'email': data.email,
+        'full_name': data.full_name,
+        'password': security.get_password_hash(data.password),
+        'disabled': data.disabled
+        
+    }
+    
+    security.fake_users_db[data.username] = new_user
+    
+    return new_user

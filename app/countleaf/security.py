@@ -20,13 +20,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 fake_users_db = {
-    "johndoe": {
+    "test": {
         "username": "test",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$pHjpVkEmHKpPC2VbRrktLe.3UCg51p.OmKvTUD6WlL3QXJiNzn8mW",
-        "disabled": False,
-        "uid": "sadsdasd",
+        "full_name": "string",
+        "email": "string",
+        "password": "$2b$12$bPwYEQHMzoN7obQVlgSiHe6VmOzQARsK2FlFnqyo7JA3QBHdDZ9bK",
+        "disabled": False
     }
 }
 
@@ -102,7 +101,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    user = get_user(fake_users_db, username=token_data['username'])
     if user is None:
         raise credentials_exception
     return user

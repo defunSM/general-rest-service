@@ -1,11 +1,18 @@
-from typing import Union, Optional
+"""
+This contains all the endpoints of the countleaf API.
+"""
+
+ # pylint: disable=import-error
+
+from typing import Union
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
-from uuid import uuid4
 
-from countleaf import main
-from countleaf import security
+from endpoints import security
+from endpoints.textsummary import text_summary
+from endpoints.similarity import text_similarity_score
+from endpoints.sentiment import sentiment_analysis_score
 
 app = FastAPI(title="Countleaf API",
               description="Countleaf API 🍁 provides an online web service for natural language processing and text analysis. Including evaluating text similarity, sentiment analysis and general text analytics.",
@@ -51,7 +58,7 @@ def read_text_summary(text: str, articles: bool = False, url: bool = False):
         dict: A summary of the text.
     """
     
-    return main.text_summary(text, articles, url)
+    return text_summary(text, articles, url)
 
 
 @app.get("/countleaf/v1/similarity", tags=["countleaf v1"])
@@ -68,11 +75,11 @@ def text_similarity(text1: str, text2: str):
     
         similarity_score (int): An integer representing the similarity between 0 - 100
     """
-    return main.text_similarity(text1, text2)
+    return text_similarity_score(text1, text2)
 
 
 @app.get("/countleaf/v1/sentiment", tags=["countleaf v1"])
-def sentiment_analysis(text: str, token: str = Depends(security.oauth2_scheme)):
+def sentiment_analysis(text: str, _token: str = Depends(security.oauth2_scheme)):
     """ Uses the **distilbert-base-uncased-finetuned-sst-2-english** model to classify the sentiment of a piece of text.
 
     **Args:**
@@ -83,11 +90,11 @@ def sentiment_analysis(text: str, token: str = Depends(security.oauth2_scheme)):
     
         sentiment_score (JSON): Contains the label (positive or negative) and the score (between 0 and 1) 
     """
-    return main.sentiment_analysis(text)
+    return sentiment_analysis_score(text)
 
 
 @app.get("/countleaf/v1/testauth", tags=["test"])
-def test_authorization(token: str = Depends(security.oauth2_scheme)):
+def test_authorization(_token: str = Depends(security.oauth2_scheme)):
     return {"Test: Works"}
 
 

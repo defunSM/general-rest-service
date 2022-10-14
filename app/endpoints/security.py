@@ -1,16 +1,22 @@
-from jose import JWTError, jwt
-from passlib.context import CryptContext
-from pydantic import BaseModel
+"""
+This file contains authentication, sign up and login for users attempting to use the countleaf api.
+"""
+
+# pylint: disable=[unused-import]
+# pylint: disable=[no-name-in-module]
+
+import os
 from datetime import datetime, timedelta
 from typing import Union
 
-import os
 from dotenv import load_dotenv
+from fastapi import Depends, HTTPException, status
 
+# OAuth2PasswordRequestForm is used in api.py but imported in this file.
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-
-from fastapi import Depends, FastAPI, HTTPException, status
-
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+from pydantic import BaseModel
 
 load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')

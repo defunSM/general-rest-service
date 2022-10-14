@@ -16,7 +16,7 @@ run:
 
 # Test the fastapi on local system
 local:
-	cd app; uvicorn main:app --reload;
+	cd app; uvicorn api:app --reload;
 
 # Check logs for the docker image
 logs:

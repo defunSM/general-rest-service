@@ -1,17 +1,13 @@
 import re
 import urllib.request
 
-from nltk.tokenize import word_tokenize
-from collections import Counter
-from thefuzz import fuzz
+from .helpers import strip_articles, strip_gaps, strip_punctuation
 
-from transformers import pipeline
+from collections import Counter
 
 from bs4 import BeautifulSoup
 
-from .helpers import strip_articles, strip_gaps, strip_punctuation
-
-# TODO: Stripping punctuation twice in count_words and count_letters try to apply dry principle
+from nltk.tokenize import word_tokenize
 
 def count_frequent_word(text: str) -> Counter[str]:
     """ A data type of Counter with the first element being the word and the second element being the number of times that word appears in the text.
@@ -78,6 +74,7 @@ def extract_text_from_url(url: str):
     
     return text
     
+
 def text_summary(text: str, articles: bool = 0, url: bool = 0) -> dict:
     """ Returns a summary of the string including how many words, letters, sentences, letters / word, words / sentence, most frequent word within the block of text including compute time.
 
@@ -114,16 +111,3 @@ def text_summary(text: str, articles: bool = 0, url: bool = 0) -> dict:
     text_details["most_frequent_word"] = count_frequent_word(text)[0][0]
     
     return text_details
-
-def text_similarity(text1: str, text2: str) -> int:
-    return fuzz.token_sort_ratio(text1, text2)
-
-def sentiment_analysis(text: str):
-    sentiment_pipeline = pipeline('sentiment-analysis')
-    return sentiment_pipeline(text)
-
-if __name__ == '__main__':
-    test = """
-    Physics is the natural science that studies matter,[a] its fundamental constituents, its motion and behavior through space and time, and the related entities of energy and force. Physics is one of the most fundamental scientific disciplines, with its main goal being to understand how the universe behaves. A scientist who specializes in the field of physics is called a physicist.
-    """
-    print(text_summary(test))

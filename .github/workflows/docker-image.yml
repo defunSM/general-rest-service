@@ -22,3 +22,6 @@ jobs:
 
     - name: Logs for Docker Image
       run: docker logs $(docker ps -aq)
+
+    - name: Pytest
+      run: pytest

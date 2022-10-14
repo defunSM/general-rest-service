@@ -14,5 +14,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Build the Docker Image
+      run: docker build . --file Dockerfile --tag my-image-name:myapp
+
+    - name: Run Docker Image
+      run: docker run -d --name myapp -p 3000:300 my-image-name:myapp
+
+    - name: Logs for Docker Image
+      run: docker logs $(docker ps -aq)

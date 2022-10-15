@@ -15,7 +15,8 @@ jobs:
     steps:
     - name: Pytest
       run: | 
-        pip install pytest
+        pip install pytest poetry
+        poetry install
         python -m pytest
 
     - uses: actions/checkout@v3

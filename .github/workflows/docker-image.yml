@@ -13,6 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Pytest
+      run: | 
+        pip install pytest
+        python -m pytest
+
     - uses: actions/checkout@v3
     - name: Build the Docker Image
       run: docker build . --file Dockerfile --tag my-image-name:myapp
@@ -23,5 +28,3 @@ jobs:
     - name: Logs for Docker Image
       run: docker logs $(docker ps -aq)
 
-    - name: Pytest
-      run: python -m pytest

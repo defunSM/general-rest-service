@@ -2,17 +2,15 @@
 This contains all the endpoints of the countleaf API.
 """
 
-# pylint: disable=import-error
-
 from typing import Union
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 
-from endpoints import security
-from endpoints.textsummary import text_summary
-from endpoints.similarity import text_similarity_score
-from endpoints.sentiment import sentiment_analysis_score
+from app.endpoints import security
+from app.endpoints.textsummary import text_summary
+from app.endpoints.similarity import text_similarity_score
+from app.endpoints.sentiment import sentiment_analysis_score
 
 app = FastAPI(
     title="Countleaf API",

@@ -13,14 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Pytest
       run: | 
         pip install pytest poetry
         poetry install
         python -m pytest
 
-    - uses: actions/checkout@v3
     - name: Build the Docker Image
       run: docker build . --file Dockerfile --tag my-image-name:myapp
 

@@ -18,6 +18,11 @@ jobs:
     steps:
 
     - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version}}
+
     - name: Build the Docker Image
       run: docker build . --file Dockerfile --tag my-image-name:myapp
 
@@ -32,6 +37,5 @@ jobs:
         pip install pytest poetry
         poetry install
         python -m pytest
-      with:
-        python-version: ${{ matrix.python-version}}
+
 

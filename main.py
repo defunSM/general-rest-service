@@ -1,16 +1,16 @@
 """
 This contains all the endpoints of the countleaf API.
 """
-
+import uvicorn
 from typing import Union
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 
-from app.endpoints import security
-from app.endpoints.textsummary import text_summary
-from app.endpoints.similarity import text_similarity_score
-from app.endpoints.sentiment import sentiment_analysis_score
+from endpoints import security
+from endpoints.textsummary import text_summary
+from endpoints.similarity import text_similarity_score
+from endpoints.sentiment import sentiment_analysis_score
 
 app = FastAPI(
     title="Countleaf API",
@@ -20,7 +20,7 @@ app = FastAPI(
         "name": "Salman Hossain",
         "url": "https://defunsm.com/countleaf",
         "email": "salmanhossain500@gmail.com",
-    },
+    }
 )
 
 
@@ -162,3 +162,6 @@ async def sign_up(data: security.User):
     security.fake_users_db[data.username] = new_user
 
     return new_user
+
+if __name__ == '__main__':
+    uvicorn.run('main:app', host="0.0.0.0", port=8000, reload=True)

@@ -3,7 +3,7 @@
 # pylint: disable=[missing-function-docstring]
 
 from mysecrets import TEST_USER
-from app.api import app
+from main import app
 from fastapi.testclient import TestClient
 
 client = TestClient(app)

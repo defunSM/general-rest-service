@@ -11,6 +11,7 @@ jobs:
   flake8:
     name: Code Quality
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.9
@@ -36,6 +37,7 @@ jobs:
     name: Unit Testing
     needs: flake8
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.9

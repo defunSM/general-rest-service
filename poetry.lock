@@ -311,7 +311,7 @@ protobuf = ["grpcio-tools (>=1.49.1)"]
 
 [[package]]
 name = "h11"
-version = "0.13.0"
+version = "0.12.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
 category = "main"
 optional = false
@@ -724,6 +724,20 @@ tomli = ">=1.0.0"
 
 [package.extras]
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
+
+[[package]]
+name = "pytest-asyncio"
+version = "0.19.0"
+description = "Pytest support for asyncio"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+pytest = ">=6.1.0"
+
+[package.extras]
+testing = ["coverage (>=6.2)", "hypothesis (>=5.7.1)", "flaky (>=3.5.0)", "mypy (>=0.931)", "pytest-trio (>=0.7.0)"]
 
 [[package]]
 name = "python-dotenv"
@@ -1186,7 +1200,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.11"
-content-hash = "d8d10e40cd1f7caad494ff9ad5af82803225d6b8e9f172c2371380abc79fcc34"
+content-hash = "e5c1ae74c08ca7ca9c25604465ee6294a12e2494c433faea61d33facdff90598"
 
 [metadata.files]
 absl-py = []
@@ -1249,6 +1263,7 @@ pyflakes = []
 pylint = []
 pyparsing = []
 pytest = []
+pytest-asyncio = []
 python-dotenv = []
 python-jose = []
 python-levenshtein = []

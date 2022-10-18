@@ -9,3 +9,8 @@ Maintaining code is difficult particularly codebases for hobby projects or one o
 - CountLeaf
 - Mara
 - Hygieia
+
+# Setup
+
+    poetry install
+    make local

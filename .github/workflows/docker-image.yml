@@ -70,17 +70,13 @@ jobs:
           path: app/
 
   docker_cicd:
-    name: Build Image
-    needs: security_checks
-    runs-on: ubuntu-latest
-    steps:
-    - name: Build the Docker Image
-      run: docker build . --file Dockerfile --tag my-image-name:myapp
-
-    - name: Run Docker Image
-      run: docker run -d --name myapp -p 3000:300 my-image-name:myapp
-
-    - name: Logs for Docker Image
-      run: docker logs $(docker ps -aq)
+      name: Build Image
+      needs: security_checks
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+        - name: Build and push Docker images
+          uses: docker/build-push-action@v1
 
 

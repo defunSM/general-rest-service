@@ -47,7 +47,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install poetry
+        poetry install
     - name: Test with pytest
       run: |
         pip install pytest pytest-cov pytest-html pytest-sugar pytest-json-report
@@ -57,7 +58,7 @@ jobs:
       with:
         name: pytest-coverage-report
         path: reports/pytest/
-  
+
   security_checks:
     needs: pytest
     runs-on: ubuntu-latest

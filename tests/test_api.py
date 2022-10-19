@@ -2,9 +2,9 @@
 
 # pylint: disable=[missing-function-docstring]
 
-from mysecrets import TEST_USER
-from main import app
 from fastapi.testclient import TestClient
+from main import app
+from mysecrets import TEST_USER
 
 client = TestClient(app)
 
@@ -14,10 +14,10 @@ def user_authentication_headers():
                          data=TEST_USER)
     response = response.json()
     auth_token = response['access_token']
-    
+
     authorization = f"Bearer {auth_token}"
     headers = {"Authorization": authorization}
-    
+
     return headers
 
 def test_read_root():
@@ -38,13 +38,10 @@ def test_read_text_summary():
 
 def test_sentiment_analysis():
     data = {'text': 'I got the keys to the car.'}
-    
-    
-    response = client.get('/countleaf/v1/sentiment', 
-                          params=data, 
-                          headers=user_authentication_headers())
-    
-    assert response.status_code == 200
-    
 
-    
+
+    response = client.get('/countleaf/v1/sentiment',
+                          params=data,
+                          headers=user_authentication_headers())
+
+    assert response.status_code == 200

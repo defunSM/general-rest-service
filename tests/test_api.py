@@ -8,13 +8,28 @@ from fastapi.testclient import TestClient
 
 client = TestClient(app)
 
-async def test_read_root():
+def user_authentication_headers():
+        # Get bearer token
+    response = client.post('/token',
+                         data=TEST_USER)
+    response = response.json()
+    auth_token = response['access_token']
+    
+    authorization = f"Bearer {auth_token}"
+    headers = {"Authorization": authorization}
+    
+    return headers
+
+def test_read_root():
     response = client.get("/")
     assert response.status_code == 200
 
 def test_token():
-    response = client.get("/", params=TEST_USER)
-    assert response.json()['token_type'] == 'bearer'
+    response = client.post("/token",
+                            data=TEST_USER,
+                            )
+    print(response.content)
+    assert response.status_code == 200
 
 def test_read_text_summary():
     params = {'text': 'a'}
@@ -22,8 +37,13 @@ def test_read_text_summary():
     assert response.status_code == 200
 
 def test_sentiment_analysis():
-    payload = TEST_USER
-    response = client.get('/countleaf/v1/sentiment')
+    data = {'text': 'I got the keys to the car.'}
+    
+    
+    response = client.get('/countleaf/v1/sentiment', 
+                          params=data, 
+                          headers=user_authentication_headers())
+    
     assert response.status_code == 200
     
 

@@ -1,16 +1,19 @@
 """
 This contains all the endpoints of the countleaf API.
 """
-import uvicorn
+
+# pylint: disable=[line-too-long]
+
 from typing import Union
 
+import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
 
 from endpoints import security
-from endpoints.textsummary import text_summary
-from endpoints.similarity import text_similarity_score
 from endpoints.sentiment import sentiment_analysis_score
+from endpoints.similarity import text_similarity_score
+from endpoints.textsummary import text_summary
 
 app = FastAPI(
     title="Countleaf API",

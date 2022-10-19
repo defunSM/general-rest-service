@@ -234,6 +234,19 @@ pycodestyle = ">=2.9.0,<2.10.0"
 pyflakes = ">=2.5.0,<2.6.0"
 
 [[package]]
+name = "flake8-html"
+version = "0.4.2"
+description = "Generate HTML reports of flake8 violations"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+flake8 = ">=3.3.0"
+jinja2 = ">=3.1.0"
+pygments = ">=2.2.0"
+
+[[package]]
 name = "flatbuffers"
 version = "22.9.24"
 description = "The FlatBuffers serialization format for Python"
@@ -399,6 +412,20 @@ pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
 requirements_deprecated_finder = ["pipreqs", "pip-api"]
 colors = ["colorama (>=0.4.3,<0.5.0)"]
 plugins = ["setuptools"]
+
+[[package]]
+name = "jinja2"
+version = "3.1.2"
+description = "A very fast and expressive template engine."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+MarkupSafe = ">=2.0"
+
+[package.extras]
+i18n = ["Babel (>=2.7)"]
 
 [[package]]
 name = "joblib"
@@ -670,6 +697,17 @@ description = "passive checker of Python programs"
 category = "main"
 optional = false
 python-versions = ">=3.6"
+
+[[package]]
+name = "pygments"
+version = "2.13.0"
+description = "Pygments is a syntax highlighting package written in Python."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+plugins = ["importlib-metadata"]
 
 [[package]]
 name = "pylint"
@@ -1128,14 +1166,6 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
-name = "unicorn"
-version = "2.0.0"
-description = "Unicorn CPU emulator engine"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "urllib3"
 version = "1.26.12"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -1200,7 +1230,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.11"
-content-hash = "e5c1ae74c08ca7ca9c25604465ee6294a12e2494c433faea61d33facdff90598"
+content-hash = "7dc77cdc0d110ed300f0b28fa206908620139c4525433ebcdb3fe7ee6d2f9614"
 
 [metadata.files]
 absl-py = []
@@ -1222,6 +1252,7 @@ ecdsa = []
 fastapi = []
 filelock = []
 flake8 = []
+flake8-html = []
 flatbuffers = []
 gast = []
 google-auth = []
@@ -1235,6 +1266,7 @@ idna = []
 importlib-metadata = []
 iniconfig = []
 isort = []
+jinja2 = []
 joblib = []
 keras = []
 keras-preprocessing = []
@@ -1260,6 +1292,7 @@ pycodestyle = []
 pycparser = []
 pydantic = []
 pyflakes = []
+pygments = []
 pylint = []
 pyparsing = []
 pytest = []
@@ -1292,7 +1325,6 @@ tomlkit = []
 tqdm = []
 transformers = []
 typing-extensions = []
-unicorn = []
 urllib3 = []
 uvicorn = []
 werkzeug = []

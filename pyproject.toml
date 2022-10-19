@@ -96,12 +96,12 @@ tomlkit = "0.11.5"
 tqdm = "4.64.1"
 transformers = "4.22.2"
 typing-extensions = "4.3.0"
-unicorn = "2.0.0"
 urllib3 = "1.26.12"
 uvicorn = "0.18.3"
 Werkzeug = "2.2.2"
 wrapt = "1.14.1"
 pytest-asyncio = "^0.19.0"
+flake8-html = "^0.4.2"
 
 [tool.poetry.dev-dependencies]
 

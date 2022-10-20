@@ -488,6 +488,17 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "mangum"
+version = "0.15.1"
+description = "AWS Lambda support for ASGI applications"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+typing-extensions = "*"
+
+[[package]]
 name = "markdown"
 version = "3.4.1"
 description = "Python implementation of Markdown."
@@ -1230,7 +1241,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.11"
-content-hash = "7dc77cdc0d110ed300f0b28fa206908620139c4525433ebcdb3fe7ee6d2f9614"
+content-hash = "da136de83f9cba3d772e85f4e4465ed3a435483b493c89d5ccff3924108e54ee"
 
 [metadata.files]
 absl-py = []
@@ -1273,6 +1284,7 @@ keras-preprocessing = []
 lazy-object-proxy = []
 levenshtein = []
 libclang = []
+mangum = []
 markdown = []
 markupsafe = []
 mccabe = []

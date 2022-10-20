@@ -9,6 +9,7 @@ from typing import Union
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
+from mangum import Mangum
 
 from endpoints import security
 from endpoints.sentiment import sentiment_analysis_score
@@ -166,5 +167,11 @@ async def sign_up(data: security.User):
 
     return new_user
 
+def start():
+    uvicorn.run('main:app', host="0.0.0.0", port=8000, reload=True)
+
 if __name__ == '__main__':
     uvicorn.run('main:app', host="0.0.0.0", port=8000, reload=True)
+
+# Bridge gap between Lambda event payload and FastAPI
+handler = Mangum(app)

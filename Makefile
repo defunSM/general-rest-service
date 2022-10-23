@@ -12,11 +12,11 @@ build:
 
 # Run the docker image
 run:
-	docker run -d -p 3000:3000 dockerimage  
+	docker run -d -p 3000:3000 dockerimage
 
 # Test the fastapi on local system
 local:
-	cd app; uvicorn main:app --reload;
+	docker-compose up
 
 # Check logs for the docker image
 logs:

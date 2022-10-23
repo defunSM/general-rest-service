@@ -102,7 +102,7 @@ Werkzeug = "2.2.2"
 wrapt = "1.14.1"
 pytest-asyncio = "^0.19.0"
 flake8-html = "^0.4.2"
-mangum = "^0.15.1"
+redis = "^4.3.4"
 
 [tool.poetry.dev-dependencies]
 

@@ -7,18 +7,23 @@ This contains all the endpoints of the countleaf API.
 from typing import Union
 
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, Request, FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
-from mangum import Mangum
 
 from endpoints import security
 from endpoints.sentiment import sentiment_analysis_score
 from endpoints.similarity import text_similarity_score
 from endpoints.textsummary import text_summary
 
+from redis_limiter import limiter
+
 app = FastAPI(
     title="Countleaf API",
-    description="Countleaf API 🍁 provides an online web service for natural language processing and text analysis. Including evaluating text similarity, sentiment analysis and general text analytics.",
+    description=
+    """
+    Countleaf API 🍁 provides an online web service for natural language processing and text analysis.
+    Including evaluating text similarity, sentiment analysis and general text analytics.
+    """,
     version="1.0.0",
     contact={
         "name": "Salman Hossain",
@@ -35,7 +40,7 @@ def read_root():
 
 
 @app.get("/countleaf/v1/summary", tags=["countleaf v1"])
-def read_text_summary(text: str, articles: bool = False, url: bool = False):
+def read_text_summary(request: Request, text: str, articles: bool = False, url: bool = False):
     """Returns a summary of the text including:
 
     ✅ Words \n
@@ -56,8 +61,18 @@ def read_text_summary(text: str, articles: bool = False, url: bool = False):
 
         dict: A summary of the text.
     """
+    client_ip = request.client.host
+    res = limiter(client_ip, 5)
 
-    return text_summary(text, articles, url)
+    if res['call']:
+        return text_summary(text, articles, url)
+
+    raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                        detail={ "message": "call limit reached",
+                                    "ttl": res["ttl"]})
+
+
+
 
 
 @app.get("/countleaf/v1/similarity", tags=["countleaf v1"])
@@ -167,11 +182,6 @@ async def sign_up(data: security.User):
 
     return new_user
 
-def start():
-    uvicorn.run('main:app', host="0.0.0.0", port=8000, reload=True)
-
 if __name__ == '__main__':
     uvicorn.run('main:app', host="0.0.0.0", port=8000, reload=True)
 
-# Bridge gap between Lambda event payload and FastAPI
-handler = Mangum(app)

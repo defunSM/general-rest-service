@@ -7,15 +7,16 @@ This contains all the endpoints of the countleaf API.
 from typing import Union
 
 import uvicorn
-from fastapi import Depends, Request, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 
-from endpoints import security
-from endpoints.sentiment import sentiment_analysis_score
-from endpoints.similarity import text_similarity_score
-from endpoints.textsummary import text_summary
+from core import security
+from core.api_limiter import limit_api_calls
 
-from redis_limiter import limiter
+from routes.sentiment import sentiment_analysis_score
+from routes.similarity import text_similarity_score
+from routes.textsummary import text_summary
+
 
 app = FastAPI(
     title="Countleaf API",
@@ -40,7 +41,8 @@ def read_root():
 
 
 @app.get("/countleaf/v1/summary", tags=["countleaf v1"])
-def read_text_summary(request: Request, text: str, articles: bool = False, url: bool = False):
+@limit_api_calls
+def read_text_summary(_request: Request, text: str, articles: bool = False, url: bool = False):
     """Returns a summary of the text including:
 
     ✅ Words \n
@@ -61,22 +63,14 @@ def read_text_summary(request: Request, text: str, articles: bool = False, url: 
 
         dict: A summary of the text.
     """
-    client_ip = request.client.host
-    res = limiter(client_ip, 5)
 
-    if res['call']:
-        return text_summary(text, articles, url)
-
-    raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                        detail={ "message": "call limit reached",
-                                    "ttl": res["ttl"]})
-
-
+    return text_summary(text, articles, url)
 
 
 
 @app.get("/countleaf/v1/similarity", tags=["countleaf v1"])
-def text_similarity(text1: str, text2: str):
+@limit_api_calls
+def text_similarity(_request: Request, text1: str, text2: str):
     """Returns the similarity between text1 and text2 using Levenshtein distance.
 
     **Args:**
@@ -93,7 +87,8 @@ def text_similarity(text1: str, text2: str):
 
 
 @app.get("/countleaf/v1/sentiment", tags=["countleaf v1"])
-def sentiment_analysis(text: str, _token: str = Depends(security.oauth2_scheme)):
+@limit_api_calls
+def sentiment_analysis(_request: Request, text: str, _token: str = Depends(security.oauth2_scheme)):
     """**distilbert-base-uncased-finetuned-sst-2-english** model to get the sentiment of the text.
 
     **Args:**
@@ -108,13 +103,16 @@ def sentiment_analysis(text: str, _token: str = Depends(security.oauth2_scheme))
 
 
 @app.get("/countleaf/v1/testauth", tags=["test"])
-def test_authorization(_token: str = Depends(security.oauth2_scheme)):
+@limit_api_calls
+def test_authorization(_request: Request, _token: str = Depends(security.oauth2_scheme)):
     """ Endpoint to test that authorization works."""
     return {"Test: Works"}
 
 
 @app.post("/token", response_model=security.Token, tags=["auth"])
+@limit_api_calls
 async def login_for_access_token(
+    _request: Request,
     form_data: security.OAuth2PasswordRequestForm = Depends(),
 ):
     """ Endpoint for dealing with login to get access token."""
@@ -140,7 +138,9 @@ async def login_for_access_token(
 
 
 @app.get("/users/me/", response_model=security.User, tags=["test"])
+@limit_api_calls
 async def read_users_me(
+    _request: Request,
     current_user: security.User = Depends(security.get_current_active_user),
 ):
     """Get user settings from database."""
@@ -148,7 +148,9 @@ async def read_users_me(
 
 
 @app.get("/users/me/items/", tags=["test"])
+@limit_api_calls
 async def read_own_items(
+    _request: Request,
     current_user: security.User = Depends(security.get_current_active_user),
 ):
     """ Read user items from database. """
@@ -158,7 +160,8 @@ async def read_own_items(
 @app.post(
     "/signup", summary="Create new user", response_model=security.User, tags=["auth"]
 )
-async def sign_up(data: security.User):
+@limit_api_calls
+async def sign_up(_request: Request, data: security.User):
     """ Endpoint that handles sign up for new users."""
     user = security.get_user(security.fake_users_db, data.username)
 
@@ -184,4 +187,3 @@ async def sign_up(data: security.User):
 
 if __name__ == '__main__':
     uvicorn.run('main:app', host="0.0.0.0", port=8000, reload=True)
-

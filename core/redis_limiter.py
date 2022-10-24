@@ -15,6 +15,7 @@ def limiter(key, limit):
         _type_: _description_
     """
     req = client.incr(key)
+
     if req == 1:
         client.expire(key, 60)
         ttl = 60
@@ -31,4 +32,3 @@ def limiter(key, limit):
         "call": True,
         "ttl": ttl
     }
-    
